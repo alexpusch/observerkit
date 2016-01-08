@@ -1,0 +1,25 @@
+{
+  "name": "observerkit",
+  "version": "0.0.1",
+  "description": "Add Observe and Events API to you objects",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:alexpusch/observerkit.git"
+  },
+  "keywords": [
+    "observe",
+    "events",
+    "mixin",
+    "util"
+  ],
+  "author": "Alex Puschinsky",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alexpusch/observerkit/issues"
+  },
+  "homepage": "https://github.com/alexpusch/observerkit"
+}
