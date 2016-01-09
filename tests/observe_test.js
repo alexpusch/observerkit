@@ -63,15 +63,15 @@ describe('#observe', function(){
     expect(model.__x).to.equal(20);
   })
 
-  it('can observe multiple keys', function(){
-    observe(model, ['x', 'y'] , spy);
+  it('can observe multiple keys by a space seperated list', function(){
+    observe(model, 'x y' , spy);
     model.x = 10;
     expect(spy).to.have.been.calledOnce;
     model.y = 10;
     expect(spy).to.have.been.calledTwice;
   });
 })
-  
+
 describe('#unobserve', function () {
   let model, spy;
 
@@ -84,6 +84,15 @@ describe('#unobserve', function () {
     observe(model, 'x', spy);
     unobserve(model, 'x', spy);
     model.x = 10;
+    expect(spy).not.to.have.been.called;
+  });
+
+  it('remove observation from several space seperated attributes', function () {
+    observe(model, 'x', spy);
+    observe(model, 'y', spy);
+    unobserve(model, 'x y', spy);
+    model.x = 10;
+    model.y = 10;
     expect(spy).not.to.have.been.called;
   });
 

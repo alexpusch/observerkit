@@ -2,14 +2,10 @@ import EventsChannel from './events_channel';
 
 export function observe(target, keys, callback){
   if(!target._observe){
-    _initObserver(target);    
-  }  
-
-  if(!(keys instanceof Array)){
-    keys = [keys];
+    _initObserver(target);
   }
 
-  keys.forEach(function(key){
+  _forEachAttribute(keys, function(key){
     target._observe.channel.on(`change:${key}`, callback);
 
     if(!_isObserving(target, key)){
@@ -26,11 +22,7 @@ export function observe(target, keys, callback){
 }
 
 export function unobserve(target, keys, callback){
-  if(!(keys instanceof Array)){
-    keys = [keys];
-  }
-
-  keys.forEach(function(key){
+  _forEachAttribute(keys, function(key){
     target._observe.channel.off(`change:${key}`, callback);
   });
 }
@@ -56,7 +48,7 @@ function _defineProperties(target, key){
   }
 
   Object.defineProperty(target, key, {
-    enumerable: true, 
+    enumerable: true,
     configurable: true,
     get: function(){
       if(getter){
@@ -65,7 +57,7 @@ function _defineProperties(target, key){
       else{
         return target._observe.attributes[`${key}`];
       }
-    }, 
+    },
     set: function(value){
       if(target._observe.attributes[`${key}`] === value){
         return;
@@ -81,4 +73,8 @@ function _defineProperties(target, key){
       target._observe.channel.trigger(`change:${key}`, value);
     }
   });
+}
+
+function _forEachAttribute(attributesString, callback){
+  attributesString.split(/\s/g).forEach(callback);
 }
