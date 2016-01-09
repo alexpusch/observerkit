@@ -36,6 +36,14 @@ describe('Observer', function () {
       expect(spy2).to.have.been.called;
     });
 
+    it('can subscribes to several several space seperated attributes', function (){
+      observer.observe(target, 'attr attr2', spy);
+      target.attr = 'value';
+      target.attr2 = 'value';
+
+      expect(spy).to.have.been.calledTwice;
+    });
+
     it('can subscribes to different targets', function (){
       observer.observe(target, 'attr', spy);
       observer.observe(target2, 'attr', spy2);
@@ -88,6 +96,16 @@ describe('Observer', function () {
       expect(spy).not.to.have.been.called;
     });
 
+    it('removes a subscribtion from a spaced seperated attribute list', function () {
+      observer.observe(target, 'attr', spy);
+      observer.observe(target, 'attr2', spy);
+      observer.stopObservingOn(target, 'attr attr2', spy);
+      target.attr = 'value';
+      target.attr2 = 'value';
+
+      expect(spy).not.to.have.been.called;
+    });
+
     it('does nothing if called with a non observed attribute', function () {
       observer.observe(target, 'attr', spy);
       let fn = function(){
@@ -120,6 +138,17 @@ describe('Observer', function () {
     it('stops observing an entire target if called without an attribute', function () {
       observer.observe(target, 'attr', spy);
       observer.observe(target, 'attr2', spy);
+
+      observer.stopObservingOn(target);
+
+      target.attr = 'value';
+      target.attr2 = 'value';
+
+      expect(spy).not.to.have.been.called;
+    });
+
+    it('stops observing an entire target when attributes where subscribed in on call', function () {
+      observer.observe(target, 'attr attr2', spy);
 
       observer.stopObservingOn(target);
 

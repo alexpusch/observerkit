@@ -37,6 +37,14 @@ describe('Listener', function () {
       expect(spy2).to.have.been.called;
     });
 
+    it('can subscribes to several space seperated events', function (){
+      listener.listenTo(channel, 'eventName eventName2', spy);
+      channel.trigger('eventName');
+      channel.trigger('eventName2');
+
+      expect(spy).to.have.been.calledTwice;
+    });
+
     it('can subscribes to different channels', function (){
       listener.listenTo(channel, 'eventName', spy);
       listener.listenTo(channel2, 'eventName2', spy2);
@@ -81,10 +89,20 @@ describe('Listener', function () {
   });
 
   describe('stopListeningTo', function () {
-    it('removes a subscribtion from an event in the givven channel', function () {
+    it('removes a subscribtion from an event in the given channel', function () {
       listener.listenTo(channel, 'eventName', spy);
       listener.stopListeningTo(channel, 'eventName', spy);
       channel.trigger('eventName');
+
+      expect(spy).not.to.have.been.called;
+    });
+
+    it('removes a subscribtion from a spaced seperated event list', function () {
+      listener.listenTo(channel, 'eventName', spy);
+      listener.listenTo(channel, 'eventName2', spy);
+      listener.stopListeningTo(channel, 'eventName eventName2', spy);
+      channel.trigger('eventName');
+      channel.trigger('eventName2');
 
       expect(spy).not.to.have.been.called;
     });
@@ -121,6 +139,17 @@ describe('Listener', function () {
     it('stops listening to an entire channel if called without event name', function () {
       listener.listenTo(channel, 'eventName', spy);
       listener.listenTo(channel, 'eventName2', spy);
+
+      listener.stopListeningTo(channel);
+
+      channel.trigger('eventName');
+      channel.trigger('eventName2');
+
+      expect(spy).not.to.have.been.called;
+    });
+
+    it('stops listening to an entire channel when events where subscribed in one call', function () {
+      listener.listenTo(channel, 'eventName eventName2', spy);
 
       listener.stopListeningTo(channel);
 

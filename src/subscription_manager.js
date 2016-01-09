@@ -14,25 +14,34 @@ export default class SubscriptionManager{
     this._unsubscribe = options.unsubscribeFn;
   }
 
-  subscribeTo(target, message, callback){
-    this._ensureStructure(target, message);
+  subscribeTo(target, messages, callback){
+    this._forEachMessage(messages, (message) => {
+      this._ensureStructure(target, message);
 
-    this._register(target, message, callback);
-    this._subscribe(target, message, callback);
+      this._register(target, message, callback);
+      this._subscribe(target, message, callback);
+    });
   }
 
-  unsubscribeFrom(target, message, callback){
-    if(!this.isSubscribedTo(target, message, callback)){
+  unsubscribeFrom(target, messages, callback){
+    if(arguments.length === 1){
+      if(this.isSubscribedTo(target)){
+        this._unsubscribeFromTarget(target);
+      }
       return;
     }
 
-    if(arguments.length === 1){
-      this._unsubscribeFromTarget(target);
-    } else if (arguments.length === 2){
-      this._unsubscribeFromMessage(target, message);
-    } else {
-      this._unsubscribeFromMessageCallback(target, message, callback);
-    }
+    this._forEachMessage(messages, (message) => {
+      if(!this.isSubscribedTo(target, message, callback)){
+        return;
+      }
+
+      if (arguments.length === 2){
+        this._unsubscribeFromMessage(target, message);
+      } else {
+        this._unsubscribeFromMessageCallback(target, message, callback);
+      }
+    });
   }
 
   unsubscribeFromAll(){
@@ -119,6 +128,10 @@ export default class SubscriptionManager{
     if(message && !this.handlers.get(target)[message]){
       this.handlers.get(target)[message] = [];
     }
+  }
+
+  _forEachMessage(messageString, callback){
+    messageString.split(/\s/g).forEach(callback);
   }
 }
 
