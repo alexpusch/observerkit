@@ -1,3 +1,5 @@
+import { removeFromArray } from './helpers'
+
 export default class EventsChannel {
   on(eventName, callback){
     if(this.directory === undefined){
@@ -18,7 +20,7 @@ export default class EventsChannel {
     }
 
     let callbackList = this.directory[eventName];
-    _removeFromArray(callbackList, callback);
+    removeFromArray(callbackList, callback);
   }
 
   trigger(eventName, ...args){
@@ -38,9 +40,3 @@ export default class EventsChannel {
   }
 }
 
-function _removeFromArray(array, item){
-  let index = array.indexOf(item);
-  if ( index > -1){
-    array.splice(index, 1);
-  }
-}
