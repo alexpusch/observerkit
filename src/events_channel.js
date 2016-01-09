@@ -1,31 +1,44 @@
 import { removeFromArray } from './helpers'
 
+export function mixinEvents(prototype){
+  let methodNames = Object.getOwnPropertyNames(EventsChannel.prototype);
+
+  methodNames.forEach(function(methodName){
+    if(methodName === 'constructor'){
+      return;
+    }
+
+    let method = EventsChannel.prototype[methodName];
+    prototype[methodName] = method;
+  });
+}
+
 export default class EventsChannel {
   on(eventNames, callback){
-    if(this.directory === undefined){
-      this.directory = {};
+    if(this.eventsDirectory === undefined){
+      this.eventsDirectory = {};
     }
 
     this._forEachEvent(eventNames, (eventName) => {
-      if (this.directory[eventName] === undefined){
-        this.directory[eventName] = [];
+      if (this.eventsDirectory[eventName] === undefined){
+        this.eventsDirectory[eventName] = [];
       }
 
-      let callbackList = this.directory[eventName];
+      let callbackList = this.eventsDirectory[eventName];
       callbackList.push(callback);
     });
   }
 
   off(eventNames, callback){
     this._forEachEvent(eventNames, (eventName) => {
-      if (this.directory === undefined || this.directory[eventName] === undefined){
+      if (this.eventsDirectory === undefined || this.eventsDirectory[eventName] === undefined){
         return;
       }
 
       if(callback === undefined){
-        delete this.directory[eventName];
+        delete this.eventsDirectory[eventName];
       } else {
-        let callbackList = this.directory[eventName];
+        let callbackList = this.eventsDirectory[eventName];
         removeFromArray(callbackList, callback);
       }
     });
@@ -33,11 +46,11 @@ export default class EventsChannel {
 
   trigger(eventNames, ...args){
     this._forEachEvent(eventNames, (eventName) => {
-      if (this.directory === undefined || this.directory[eventName] === undefined){
+      if (this.eventsDirectory === undefined || this.eventsDirectory[eventName] === undefined){
         return;
       }
 
-      let callbackList = this.directory[eventName];
+      let callbackList = this.eventsDirectory[eventName];
 
       callbackList.forEach(function(callback){
         callback( ...args );
@@ -46,11 +59,10 @@ export default class EventsChannel {
   }
 
   resetEvents(){
-    this.directory = {};
+    this.eventsDirectory = {};
   }
 
   _forEachEvent(eventsString, callback){
     eventsString.split(/\s/g).forEach(callback);
   }
 }
-

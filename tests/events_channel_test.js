@@ -3,6 +3,7 @@ import * as sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
 import EventsChannel from '../src/events_channel';
+import { mixinEvents } from '../src/events_channel';
 
 
 let expect = chai.expect;
@@ -105,5 +106,37 @@ describe('EventsChannel', function() {
 
       expect(callback).not.to.have.been.called;
     });
+  });
+});
+
+describe('mixinEvents', function () {
+  class Target{}
+
+  beforeEach(function(){
+    Target.prototype = {};
+    mixinEvents(Target.prototype);
+  });
+
+  it('mixes eventsChannels methods into object', function () {
+    expect(Target.prototype.on).to.exist;
+  });
+
+  it('on works', function () {
+    let target = new Target();
+    let spy = sinon.spy();
+    target.on('name', spy);
+    target.trigger('name');
+
+    expect(spy).to.have.been.called;
+  });
+
+  it('off works', function () {
+    let target = new Target();
+    let spy = sinon.spy();
+    target.on('name', spy);
+    target.off('name', spy);
+    target.trigger('name');
+
+    expect(spy).not.to.have.been.called;
   });
 });

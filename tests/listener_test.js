@@ -4,6 +4,7 @@ import sinonChai from 'sinon-chai';
 
 import Listener from '../src/listener'
 import EventsChannel from '../src/events_channel'
+import { mixinEvents } from '../src/events_channel'
 
 let expect = chai.expect;
 chai.use(sinonChai);
@@ -53,6 +54,17 @@ describe('Listener', function () {
 
       expect(spy).to.have.been.called;
       expect(spy2).to.have.been.called;
+    });
+
+    it('works with mixinEvents', function () {
+      class Model{}
+      mixinEvents(Model.prototype);
+
+      let model = new Model();
+      listener.listenTo(model, 'eventName', spy);
+      model.trigger('eventName');
+
+      expect(spy).to.have.been.called;
     });
   });
 
