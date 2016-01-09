@@ -4,3 +4,12 @@ export function removeFromArray(array, item){
     array.splice(index, 1);
   }
 }
+
+export function shallowCopy(array){
+  let newArray = [];
+  for(let i in array){
+    newArray[i] = array[i];
+  }
+
+  return newArray;
+}
