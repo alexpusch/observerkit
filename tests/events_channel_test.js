@@ -23,6 +23,14 @@ describe('EventsChannel', function() {
 
       expect(callback).to.have.been.called;
     });
+
+    it('subscribes a callback to a space seperatd events list', function(){
+      channel.on('name other', callback);
+      channel.trigger('name');
+      channel.trigger('other');
+
+      expect(callback).to.have.been.calledTwice;
+    });
   });
 
   describe('trigger', function() {
@@ -31,6 +39,16 @@ describe('EventsChannel', function() {
       channel.trigger('name', 'arg');
 
       expect(callback).to.have.been.calledWith('arg');
+    });
+
+    it('calls subscribed callbacks of several space seperated event list', function() {
+      let callback2 = sinon.spy();
+      channel.on('name', callback);
+      channel.on('other', callback2);
+      channel.trigger('name other', 'arg');
+
+      expect(callback).to.have.been.calledWith('arg');
+      expect(callback2).to.have.been.calledWith('arg');
     });
 
     it('does nothing if no callback was registerd', function() {
@@ -44,6 +62,25 @@ describe('EventsChannel', function() {
     it('remove callback subscription from a named event', function() {
       channel.on('name', callback);
       channel.off('name', callback);
+      channel.trigger('name');
+
+      expect(callback).not.to.have.been.called;
+    });
+
+    it('remove callback subscription from a space seperated named event list', function() {
+      channel.on('name', callback);
+      channel.on('other', callback);
+      channel.off('name other', callback);
+      channel.trigger('name');
+      channel.trigger('other');
+
+      expect(callback).not.to.have.been.called;
+    });
+
+    it('removes all callbacks of an event, if no callback was given', function () {
+      channel.on('name', callback);
+      channel.off('name');
+
       channel.trigger('name');
 
       expect(callback).not.to.have.been.called;

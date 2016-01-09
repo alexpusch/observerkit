@@ -1,42 +1,56 @@
 import { removeFromArray } from './helpers'
 
 export default class EventsChannel {
-  on(eventName, callback){
+  on(eventNames, callback){
     if(this.directory === undefined){
       this.directory = {};
     }
 
-    if (this.directory[eventName] === undefined){
-      this.directory[eventName] = [];
-    }
+    this._forEachEvent(eventNames, (eventName) => {
+      if (this.directory[eventName] === undefined){
+        this.directory[eventName] = [];
+      }
 
-    let callbackList = this.directory[eventName];
-    callbackList.push(callback);
+      let callbackList = this.directory[eventName];
+      callbackList.push(callback);
+    });
   }
 
-  off(eventName, callback){
-    if (this.directory === undefined || this.directory[eventName] === undefined){
-      return;
-    }
+  off(eventNames, callback){
+    this._forEachEvent(eventNames, (eventName) => {
+      if (this.directory === undefined || this.directory[eventName] === undefined){
+        return;
+      }
 
-    let callbackList = this.directory[eventName];
-    removeFromArray(callbackList, callback);
+      if(callback === undefined){
+        delete this.directory[eventName];
+      } else {
+        let callbackList = this.directory[eventName];
+        removeFromArray(callbackList, callback);
+      }
+    });
   }
 
-  trigger(eventName, ...args){
-    if (this.directory === undefined || this.directory[eventName] === undefined){
-      return;
-    }
+  trigger(eventNames, ...args){
+    this._forEachEvent(eventNames, (eventName) => {
+      if (this.directory === undefined || this.directory[eventName] === undefined){
+        return;
+      }
 
-    let callbackList = this.directory[eventName];
+      let callbackList = this.directory[eventName];
 
-    callbackList.forEach(function(callback){
-      callback( ...args );
+      callbackList.forEach(function(callback){
+        callback( ...args );
+      });
     });
   }
 
   resetEvents(){
     this.directory = {};
+  }
+
+  _forEachEvent(eventsString, callback){
+    eventsString.split(/\s/g).forEach(callback);
   }
 }
 
