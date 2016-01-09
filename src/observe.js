@@ -1,5 +1,10 @@
 import EventsChannel from './events_channel';
 
+export function mixinObserve(prototype){
+  prototype.observe = _boundedObserve;
+  prototype.unobserve = _boundedUnobserve;
+}
+
 export function observe(target, keys, callback){
   if(!target._observe){
     _initObserver(target);
@@ -25,6 +30,14 @@ export function unobserve(target, keys, callback){
   _forEachAttribute(keys, function(key){
     target._observe.channel.off(`change:${key}`, callback);
   });
+}
+
+function _boundedObserve(keys, callback){
+  observe(this, keys, callback);
+}
+
+function _boundedUnobserve(keys, callback){
+  unobserve(this, keys, callback);
 }
 
 function _initObserver(target){

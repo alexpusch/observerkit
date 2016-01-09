@@ -2,7 +2,7 @@ import * as chai from 'chai';
 import * as sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
-import {observe, unobserve} from '../src/observe';
+import {observe, unobserve, mixinObserve} from '../src/observe';
 
 let expect = chai.expect;
 
@@ -110,5 +110,37 @@ describe('#unobserve', function () {
     unobserve(model, 'y', spy);
     model.x = 10;
     expect(spy).to.have.been.called;
+  });
+});
+
+describe('mixinObserve', function () {
+  it('mixin observe methods to object', function () {
+    let target = {};
+    mixinObserve(target);
+
+    expect(target.observe).to.exist;
+  });
+
+  it('observe works', function () {
+    let target = {};
+    let spy  = sinon.spy();
+    mixinObserve(target);
+
+    target.observe('x', spy);
+    target.x = 1;
+
+    expect(spy).to.have.been.called;
+  });
+
+  it('unobserve works', function () {
+    let target = {};
+    let spy  = sinon.spy();
+    mixinObserve(target);
+
+    target.observe('x', spy);
+    target.unobserve('x', spy);
+    target.x = 1;
+
+    expect(spy).not.to.have.been.called;
   });
 });
