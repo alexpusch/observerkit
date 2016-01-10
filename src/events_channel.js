@@ -1,4 +1,4 @@
-import { removeFromArray } from './helpers'
+import { removeFromArray, forEachDelimited } from './helpers'
 
 export function mixinEvents(prototype){
   let methodNames = Object.getOwnPropertyNames(EventsChannel.prototype);
@@ -63,6 +63,6 @@ export default class EventsChannel {
   }
 
   _forEachEvent(eventsString, callback){
-    eventsString.split(/\s/g).forEach(callback);
+    forEachDelimited(eventsString, callback);
   }
 }

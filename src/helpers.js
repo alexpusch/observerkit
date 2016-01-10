@@ -13,3 +13,7 @@ export function shallowCopy(array){
 
   return newArray;
 }
+
+export function forEachDelimited(string, callback){
+  string.split(/\s+/g).forEach(callback);
+}

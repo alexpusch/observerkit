@@ -1,4 +1,4 @@
-import { removeFromArray, shallowCopy } from './helpers';
+import { removeFromArray, shallowCopy, forEachDelimited } from './helpers';
 
 export default class SubscriptionManager{
   // handlers is of the form:
@@ -131,7 +131,7 @@ export default class SubscriptionManager{
   }
 
   _forEachMessage(messageString, callback){
-    messageString.split(/\s/g).forEach(callback);
+    forEachDelimited(messageString, callback);
   }
 }
 

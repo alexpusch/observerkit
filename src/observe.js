@@ -1,4 +1,5 @@
 import EventsChannel from './events_channel';
+import { forEachDelimited } from './helpers';
 
 export function mixinObserve(prototype){
   prototype.observe = _boundedObserve;
@@ -89,5 +90,5 @@ function _defineProperties(target, key){
 }
 
 function _forEachAttribute(attributesString, callback){
-  attributesString.split(/\s/g).forEach(callback);
+  forEachDelimited(attributesString, callback);
 }
