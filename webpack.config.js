@@ -4,10 +4,11 @@ module.exports = {
   entry: "./src/index.js",
   output: {
       path: "dist",
-      filename: "observerkit.js"
+      filename: "observerkit.js",
+      libraryTarget: "umd"
   },
   module : {
-    loaders: [ { 
+    loaders: [ {
         test   : /.js$/,
         loader : 'babel-loader',
         exclude: /node_modules/,
