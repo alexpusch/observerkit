@@ -13,7 +13,7 @@ export function mixinEvents(prototype){
   });
 }
 
-export default class EventsChannel {
+export class EventsChannel {
   on(eventNames, callback){
     if(this.eventsDirectory === undefined){
       this.eventsDirectory = {};

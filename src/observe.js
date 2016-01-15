@@ -1,4 +1,4 @@
-import EventsChannel from './events_channel';
+import { EventsChannel } from './events_channel';
 import { forEachDelimited } from './helpers';
 
 export function mixinObserve(prototype){

@@ -1,7 +1,7 @@
 import {observe, unobserve} from './observe';
 import SubscriptionManager from './subscription_manager';
 
-export default class Observer{
+export class Observer{
   observe(target, attributes, callback){
     this._ensureInit();
     this.subscriptionManager.subscribeTo(target, attributes, callback);

@@ -1,6 +1,6 @@
 import SubscriptionManager from './subscription_manager';
 
-export default class Listner{
+export class Listener{
   listenTo(channel, eventName, callback){
     this._ensureInit();
     this.subscriptionManager.subscribeTo(channel, eventName, callback);

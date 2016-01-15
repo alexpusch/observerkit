@@ -2,7 +2,7 @@ import * as chai from 'chai';
 import * as sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
-import {observe, unobserve, mixinObserve} from '../src/observe';
+import { observe, unobserve, mixinObserve } from '../src/observe';
 
 let expect = chai.expect;
 
