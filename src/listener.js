@@ -1,35 +1,36 @@
 import SubscriptionManager from './subscription_manager';
 
 export class Listener{
-  listenTo(channel, eventName, callback){
+  listenTo(channel, eventName, callback) {
     this._ensureInit();
     this.subscriptionManager.subscribeTo(channel, eventName, callback);
   }
 
-  stopListeningTo(...args){
+  stopListeningTo(...args) {
     this._ensureInit();
     this.subscriptionManager.unsubscribeFrom(...args);
   }
 
-  stopListening(){
+  stopListening() {
     this._ensureInit();
     this.subscriptionManager.unsubscribeFromAll();
   }
 
-  isListeningTo(channel, eventName, callback){
+  isListeningTo(channel, eventName, callback) {
     this._ensureInit();
     return this.subscriptionManager.isSubscribedTo(channel, eventName, callback);
   }
 
-  _ensureInit(){
-    if(!this.subscriptionManager){
+  _ensureInit() {
+    if (!this.subscriptionManager) {
       this.subscriptionManager = new SubscriptionManager({
-        subscribeFn: function(channel, eventName, callback){
+        subscribeFn: function(channel, eventName, callback) {
           channel.on(eventName, callback);
         },
-        unsubscribeFn: function(channel, eventName, callback){
+
+        unsubscribeFn: function(channel, eventName, callback) {
           channel.off(eventName, callback);
-        }
+        },
       });
     }
   }

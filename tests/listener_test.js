@@ -2,17 +2,17 @@ import * as chai from 'chai';
 import * as sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
-import { Listener } from '../src/listener'
-import { EventsChannel } from '../src/events_channel'
-import { mixinEvents } from '../src/events_channel'
+import { Listener } from '../src/listener';
+import { EventsChannel } from '../src/events_channel';
+import { mixinEvents } from '../src/events_channel';
 
 let expect = chai.expect;
 chai.use(sinonChai);
 
-describe('Listener', function () {
+describe('Listener', function() {
   let channel, channel2, spy, spy2, listener;
 
-  beforeEach(function () {
+  beforeEach(function() {
     channel = new EventsChannel();
     channel2 = new EventsChannel();
     spy = sinon.spy();
@@ -20,15 +20,15 @@ describe('Listener', function () {
     listener = new Listener();
   });
 
-  describe('listen', function () {
-    it('subscribes to an event of a given object', function () {
+  describe('listen', function() {
+    it('subscribes to an event of a given object', function() {
       listener.listenTo(channel, 'eventName', spy);
       channel.trigger('eventName');
 
       expect(spy).to.have.been.called;
     });
 
-    it('can subscribes to several events of a single channel', function (){
+    it('can subscribes to several events of a single channel', function() {
       listener.listenTo(channel, 'eventName', spy);
       listener.listenTo(channel, 'eventName2', spy2);
       channel.trigger('eventName');
@@ -38,7 +38,7 @@ describe('Listener', function () {
       expect(spy2).to.have.been.called;
     });
 
-    it('can subscribes to several space seperated events', function (){
+    it('can subscribes to several space seperated events', function() {
       listener.listenTo(channel, 'eventName eventName2', spy);
       channel.trigger('eventName');
       channel.trigger('eventName2');
@@ -46,7 +46,7 @@ describe('Listener', function () {
       expect(spy).to.have.been.calledTwice;
     });
 
-    it('can subscribes to different channels', function (){
+    it('can subscribes to different channels', function() {
       listener.listenTo(channel, 'eventName', spy);
       listener.listenTo(channel2, 'eventName2', spy2);
       channel.trigger('eventName');
@@ -56,7 +56,7 @@ describe('Listener', function () {
       expect(spy2).to.have.been.called;
     });
 
-    it('works with mixinEvents', function () {
+    it('works with mixinEvents', function() {
       class Model{}
       mixinEvents(Model.prototype);
 
@@ -68,40 +68,40 @@ describe('Listener', function () {
     });
   });
 
-  describe('isListeningTo', function () {
-    it('returns true if the listener listens to the given channel', function () {
+  describe('isListeningTo', function() {
+    it('returns true if the listener listens to the given channel', function() {
       listener.listenTo(channel, 'eventName', spy);
       expect(listener.isListeningTo(channel)).to.equal(true);
     });
 
-    it('returns false if the listener does not listens to the given channel', function () {
+    it('returns false if the listener does not listens to the given channel', function() {
       listener.listenTo(channel, 'eventName', spy);
       expect(listener.isListeningTo(channel2)).to.equal(false);
     });
 
-    it('returns true if the listener listens to the given event', function () {
+    it('returns true if the listener listens to the given event', function() {
       listener.listenTo(channel, 'eventName', spy);
       expect(listener.isListeningTo(channel, 'eventName')).to.equal(true);
     });
 
-    it('returns false if the listener listens to the given event', function () {
+    it('returns false if the listener listens to the given event', function() {
       listener.listenTo(channel, 'eventName', spy);
       expect(listener.isListeningTo(channel, 'eventName2')).to.equal(false);
     });
 
-    it('returns true if the listener listens to the given event with a given callback', function () {
+    it('returns true if the listener listens to the given event with a given callback', function() {
       listener.listenTo(channel, 'eventName', spy);
       expect(listener.isListeningTo(channel, 'eventName', spy)).to.equal(true);
     });
 
-    it('returns false if the listener listens to the given event with a given callback', function () {
+    it('returns false if the listener listens to the given event with a given callback', function() {
       listener.listenTo(channel, 'eventName', spy);
       expect(listener.isListeningTo(channel, 'eventName', spy2)).to.equal(false);
     });
   });
 
-  describe('stopListeningTo', function () {
-    it('removes a subscribtion from an event in the given channel', function () {
+  describe('stopListeningTo', function() {
+    it('removes a subscribtion from an event in the given channel', function() {
       listener.listenTo(channel, 'eventName', spy);
       listener.stopListeningTo(channel, 'eventName', spy);
       channel.trigger('eventName');
@@ -109,7 +109,7 @@ describe('Listener', function () {
       expect(spy).not.to.have.been.called;
     });
 
-    it('removes a subscribtion from a spaced seperated event list', function () {
+    it('removes a subscribtion from a spaced seperated event list', function() {
       listener.listenTo(channel, 'eventName', spy);
       listener.listenTo(channel, 'eventName2', spy);
       listener.stopListeningTo(channel, 'eventName eventName2', spy);
@@ -119,15 +119,16 @@ describe('Listener', function () {
       expect(spy).not.to.have.been.called;
     });
 
-    it('does nothing if called with not listened to event', function () {
+    it('does nothing if called with not listened to event', function() {
       listener.listenTo(channel, 'eventName', spy);
-      let fn = function(){
+      let fn = function() {
         listener.stopListeningTo(channel, 'eventName2', spy);
       };
+
       expect(fn).not.to.throw();
     });
 
-    it('does not effect other subscriptions', function () {
+    it('does not effect other subscriptions', function() {
       listener.listenTo(channel, 'eventName', spy);
       listener.listenTo(channel, 'eventName2', spy);
       listener.stopListeningTo(channel, 'eventName2', spy);
@@ -136,7 +137,7 @@ describe('Listener', function () {
       expect(spy).to.have.been.called;
     });
 
-    it('stops listening to an event if called without a specific callback', function () {
+    it('stops listening to an event if called without a specific callback', function() {
       listener.listenTo(channel, 'eventName', spy);
       listener.listenTo(channel, 'eventName', spy2);
 
@@ -148,7 +149,7 @@ describe('Listener', function () {
       expect(spy2).not.to.have.been.called;
     });
 
-    it('stops listening to an entire channel if called without event name', function () {
+    it('stops listening to an entire channel if called without event name', function() {
       listener.listenTo(channel, 'eventName', spy);
       listener.listenTo(channel, 'eventName2', spy);
 
@@ -160,7 +161,7 @@ describe('Listener', function () {
       expect(spy).not.to.have.been.called;
     });
 
-    it('stops listening to an entire channel when events where subscribed in one call', function () {
+    it('stops listening to an entire channel when events where subscribed in one call', function() {
       listener.listenTo(channel, 'eventName eventName2', spy);
 
       listener.stopListeningTo(channel);
@@ -172,8 +173,8 @@ describe('Listener', function () {
     });
   });
 
-  describe('stopListening', function () {
-    it('stop listening to subscribed channel and event', function () {
+  describe('stopListening', function() {
+    it('stop listening to subscribed channel and event', function() {
       listener.listenTo(channel, 'eventName', spy);
       listener.stopListening();
 
@@ -182,7 +183,7 @@ describe('Listener', function () {
       expect(spy).not.to.have.been.called;
     });
 
-    it('stop listening to several subscribed channels and events', function () {
+    it('stop listening to several subscribed channels and events', function() {
       listener.listenTo(channel, 'eventName', spy);
       listener.listenTo(channel, 'eventName2', spy);
       listener.listenTo(channel2, 'eventName', spy);
@@ -198,7 +199,7 @@ describe('Listener', function () {
       expect(spy).not.to.have.been.called;
     });
 
-    it('stop listening to several callbacks subscribed to same event', function () {
+    it('stop listening to several callbacks subscribed to same event', function() {
       listener.listenTo(channel, 'eventName', spy);
       listener.listenTo(channel, 'eventName', spy2);
 

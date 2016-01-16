@@ -9,12 +9,12 @@ export default class SubscriptionManager{
   //     },
   //     target2: {...}
   //   )
-  constructor(options){
+  constructor(options) {
     this._subscribe = options.subscribeFn;
     this._unsubscribe = options.unsubscribeFn;
   }
 
-  subscribeTo(target, messages, callback){
+  subscribeTo(target, messages, callback) {
     this._forEachMessage(messages, (message) => {
       this._ensureStructure(target, message);
 
@@ -23,20 +23,21 @@ export default class SubscriptionManager{
     });
   }
 
-  unsubscribeFrom(target, messages, callback){
-    if(arguments.length === 1){
-      if(this.isSubscribedTo(target)){
+  unsubscribeFrom(target, messages, callback) {
+    if (arguments.length === 1) {
+      if (this.isSubscribedTo(target)) {
         this._unsubscribeFromTarget(target);
       }
+
       return;
     }
 
     this._forEachMessage(messages, (message) => {
-      if(!this.isSubscribedTo(target, message, callback)){
+      if (!this.isSubscribedTo(target, message, callback)) {
         return;
       }
 
-      if (arguments.length === 2){
+      if (arguments.length === 2) {
         this._unsubscribeFromMessage(target, message);
       } else {
         this._unsubscribeFromMessageCallback(target, message, callback);
@@ -44,47 +45,47 @@ export default class SubscriptionManager{
     });
   }
 
-  unsubscribeFromAll(){
-    if(!this.handlers){
+  unsubscribeFromAll() {
+    if (!this.handlers) {
       return;
     }
 
-    for(let target of this.handlers.keys()){
+    for (let target of this.handlers.keys()) {
       this._unsubscribeFromTarget(target);
     }
   }
 
-  isSubscribedTo(target, message, callback){
-    if(!this.handlers){
+  isSubscribedTo(target, message, callback) {
+    if (!this.handlers) {
       return false;
     }
 
     let targetHandlers = this.handlers.get(target);
-    if(target && !targetHandlers){
+    if (target && !targetHandlers) {
       return false;
     }
 
     let messageHandlers = targetHandlers[message];
-    if(message && !messageHandlers){
+    if (message && !messageHandlers) {
       return false;
     }
 
-    if(callback && messageHandlers.indexOf(callback) === -1){
+    if (callback && messageHandlers.indexOf(callback) === -1) {
       return false;
     }
 
     return true;
   }
 
-  _unsubscribeFromTarget(target){
+  _unsubscribeFromTarget(target) {
     let targetHandlers = this.handlers.get(target);
 
-    for(let message in targetHandlers){
+    for (let message in targetHandlers) {
       this._unsubscribeFromMessage(target, message);
     }
   }
 
-  _unsubscribeFromMessage(target, message){
+  _unsubscribeFromMessage(target, message) {
     let targetHandlers = this.handlers.get(target);
     let callbacks = shallowCopy(targetHandlers[message]);
 
@@ -93,12 +94,12 @@ export default class SubscriptionManager{
     });
   }
 
-  _unsubscribeFromMessageCallback(target, message, callback){
+  _unsubscribeFromMessageCallback(target, message, callback) {
     this._unregister(target, message, callback);
     this._unsubscribe(target, message, callback);
   }
 
-  _register(target, message, callback){
+  _register(target, message, callback) {
     let targetHandlers = this.handlers.get(target);
     let messageHandlers = targetHandlers[message];
 
@@ -108,29 +109,29 @@ export default class SubscriptionManager{
     this.handlers.set(target, targetHandlers);
   }
 
-  _unregister(target, message, callback){
+  _unregister(target, message, callback) {
     let targetHandlers = this.handlers.get(target);
 
-    if(targetHandlers && targetHandlers[message]){
+    if (targetHandlers && targetHandlers[message]) {
       removeFromArray(targetHandlers[message], callback);
     }
   }
 
-  _ensureStructure(target, message){
-    if(!this.handlers){
+  _ensureStructure(target, message) {
+    if (!this.handlers) {
       this.handlers = new Map();
     }
 
-    if(target && !this.handlers.has(target)){
+    if (target && !this.handlers.has(target)) {
       this.handlers.set(target, {});
     }
 
-    if(message && !this.handlers.get(target)[message]){
+    if (message && !this.handlers.get(target)[message]) {
       this.handlers.get(target)[message] = [];
     }
   }
 
-  _forEachMessage(messageString, callback){
+  _forEachMessage(messageString, callback) {
     forEachDelimited(messageString, callback);
   }
 }

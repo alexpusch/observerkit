@@ -1,62 +1,62 @@
 import { EventsChannel } from './events_channel';
 import { forEachDelimited } from './helpers';
 
-export function mixinObserve(prototype){
+export function mixinObserve(prototype) {
   prototype.observe = _boundedObserve;
   prototype.unobserve = _boundedUnobserve;
 }
 
-export function observe(target, keys, callback){
-  if(!target._observe){
+export function observe(target, keys, callback) {
+  if (!target._observe) {
     _initObserver(target);
   }
 
-  _forEachAttribute(keys, function(key){
+  _forEachAttribute(keys, function(key) {
     target._observe.channel.on(`change:${key}`, callback);
 
-    if(!_isObserving(target, key)){
+    if (!_isObserving(target, key)) {
       target._observe.obseveables.add(key);
       let oldValue = target[key];
 
       _defineProperties(target, key);
 
-      if(oldValue !== undefined){
+      if (oldValue !== undefined) {
         target[key] = oldValue;
       }
     }
   });
 }
 
-export function unobserve(target, keys, callback){
-  _forEachAttribute(keys, function(key){
+export function unobserve(target, keys, callback) {
+  _forEachAttribute(keys, function(key) {
     target._observe.channel.off(`change:${key}`, callback);
   });
 }
 
-function _boundedObserve(keys, callback){
+function _boundedObserve(keys, callback) {
   observe(this, keys, callback);
 }
 
-function _boundedUnobserve(keys, callback){
+function _boundedUnobserve(keys, callback) {
   unobserve(this, keys, callback);
 }
 
-function _initObserver(target){
+function _initObserver(target) {
   target._observe = {};
   target._observe.attributes = {};
   target._observe.obseveables = new Set();
   target._observe.channel = new EventsChannel();
 }
 
-function _isObserving(target, key){
+function _isObserving(target, key) {
   target._observe.obseveables.has(key);
 }
 
-function _defineProperties(target, key){
+function _defineProperties(target, key) {
   let descriptor = Object.getOwnPropertyDescriptor(target, key);
   let setter, getter;
 
-  if(descriptor){
+  if (descriptor) {
     setter = descriptor.set;
     getter = descriptor.get;
   }
@@ -64,31 +64,30 @@ function _defineProperties(target, key){
   Object.defineProperty(target, key, {
     enumerable: true,
     configurable: true,
-    get: function(){
-      if(getter){
+    get: function() {
+      if (getter) {
         return getter();
-      }
-      else{
+      } else {
         return target._observe.attributes[`${key}`];
       }
     },
-    set: function(value){
-      if(target._observe.attributes[`${key}`] === value){
+
+    set: function(value) {
+      if (target._observe.attributes[`${key}`] === value) {
         return;
       }
 
-      if(setter){
+      if (setter) {
         setter.call(target, value);
-      }
-      else{
+      } else {
         target._observe.attributes[`${key}`] = value;
       }
 
       target._observe.channel.trigger(`change:${key}`, value);
-    }
+    },
   });
 }
 
-function _forEachAttribute(attributesString, callback){
+function _forEachAttribute(attributesString, callback) {
   forEachDelimited(attributesString, callback);
 }

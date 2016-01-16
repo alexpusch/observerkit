@@ -5,7 +5,6 @@ import sinonChai from 'sinon-chai';
 import { EventsChannel } from '../src/events_channel';
 import { mixinEvents } from '../src/events_channel';
 
-
 let expect = chai.expect;
 chai.use(sinonChai);
 
@@ -25,7 +24,7 @@ describe('EventsChannel', function() {
       expect(callback).to.have.been.called;
     });
 
-    it('subscribes a callback to a space seperatd events list', function(){
+    it('subscribes a callback to a space seperatd events list', function() {
       channel.on('name other', callback);
       channel.trigger('name');
       channel.trigger('other');
@@ -53,7 +52,7 @@ describe('EventsChannel', function() {
     });
 
     it('does nothing if no callback was registerd', function() {
-      let emptyTriggerFn = function(){ channel.trigger('empty'); };
+      let emptyTriggerFn = function() { channel.trigger('empty'); };
 
       expect(emptyTriggerFn).not.throw();
     });
@@ -78,7 +77,7 @@ describe('EventsChannel', function() {
       expect(callback).not.to.have.been.called;
     });
 
-    it('removes all callbacks of an event, if no callback was given', function () {
+    it('removes all callbacks of an event, if no callback was given', function() {
       channel.on('name', callback);
       channel.off('name');
 
@@ -109,19 +108,19 @@ describe('EventsChannel', function() {
   });
 });
 
-describe('mixinEvents', function () {
+describe('mixinEvents', function() {
   class Target{}
 
-  beforeEach(function(){
+  beforeEach(function() {
     Target.prototype = {};
     mixinEvents(Target.prototype);
   });
 
-  it('mixes eventsChannels methods into object', function () {
+  it('mixes eventsChannels methods into object', function() {
     expect(Target.prototype.on).to.exist;
   });
 
-  it('on works', function () {
+  it('on works', function() {
     let target = new Target();
     let spy = sinon.spy();
     target.on('name', spy);
@@ -130,7 +129,7 @@ describe('mixinEvents', function () {
     expect(spy).to.have.been.called;
   });
 
-  it('off works', function () {
+  it('off works', function() {
     let target = new Target();
     let spy = sinon.spy();
     target.on('name', spy);
