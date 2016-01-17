@@ -1,7 +1,7 @@
 var WebpackNotifierPlugin = require('webpack-notifier');
 
 module.exports = {
-  entry: ['babel-polyfill', './src/index.js'],
+  entry: ['./src/index.js'],
   output: {
     path: 'dist',
     filename: 'observerkit.js',
