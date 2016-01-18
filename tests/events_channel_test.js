@@ -1,11 +1,8 @@
-import "babel-polyfill";
-
 import * as chai from 'chai';
 import * as sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
-import { EventsChannel } from '../src/events_channel';
-import { mixinEvents } from '../src/events_channel';
+import { EventsChannel, mixinEvents } from '../dist/observerkit';
 
 let expect = chai.expect;
 chai.use(sinonChai);
