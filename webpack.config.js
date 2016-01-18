@@ -16,6 +16,11 @@ module.exports = {
           presets: ['es2015'],
         },
       },
+      // {
+      //   test: /sinon/,
+      //   loader: 'imports?define=>false,require=>false',
+      //   exclude: /node_modules/,
+      // },
     ],
   },
   plugins: [

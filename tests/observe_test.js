@@ -1,7 +1,7 @@
 import "babel-polyfill";
 
 import * as chai from 'chai';
-import * as sinon from 'sinon';
+import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
 import { observe, unobserve, mixinObserve } from '../src/observe';
