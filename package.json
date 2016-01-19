@@ -6,7 +6,8 @@
   "scripts": {
     "test": "npm run build && node_modules/.bin/mocha tests/*_test.js --compilers js:babel-register",
     "build": "node_modules/.bin/webpack",
-    "test-server": "node_modules/.bin/webpack-dev-server 'mocha!./tests/index.js' --output-file test.js --port 8181 -d --host 0.0.0.0"
+    "test-server": "node_modules/.bin/webpack-dev-server 'mocha!./tests/index.js' --output-file test.js --port 8181 -d --host 0.0.0.0",
+    "prepublish": "npm run build && npm run build -- -p --output-file=observerkit.min.js"
   },
   "repository": {
     "type": "git",
