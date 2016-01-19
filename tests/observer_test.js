@@ -1,8 +1,8 @@
 import * as chai from 'chai';
-import * as sinon from 'sinon';
+import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
-import { Observer } from '../src/observer';
+import { Observer } from '../dist/observerkit';
 
 let expect = chai.expect;
 chai.use(sinonChai);

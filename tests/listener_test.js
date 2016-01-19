@@ -1,10 +1,9 @@
 import * as chai from 'chai';
-import * as sinon from 'sinon';
+import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
-import { Listener } from '../src/listener';
-import { EventsChannel } from '../src/events_channel';
-import { mixinEvents } from '../src/events_channel';
+
+import { Listener, EventsChannel, mixinEvents } from '../dist/observerkit';
 
 let expect = chai.expect;
 chai.use(sinonChai);
